@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
@@ -36,6 +37,7 @@ inline fun FragmentActivity.setupFragmentOptional(@IdRes containerId: Int, addTo
 }
 
 inline fun <reified T : Activity> Activity.startActivity() = startActivity(Intent(this, T::class.java))
+inline fun <reified T : Activity> Activity.startActivity(config: Bundle.() -> Unit) = startActivity(Intent(this, T::class.java).apply { putExtras(Bundle().apply { config() }) })
 inline fun <reified T : Activity> Fragment.startActivity(): Unit = activity.startActivity<T>()
 inline fun <reified T : Activity> android.app.Fragment.startActivity(): Unit = activity.startActivity<T>()
 

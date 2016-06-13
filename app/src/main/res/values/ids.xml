@@ -2,4 +2,5 @@
 <resources>
   <item name="recycler_pager_viewholder_tag" type="id" />
   <item name="loading_label" type="id" />
+  <item name="loading_view" type="id" />
 </resources>

@@ -1,6 +1,7 @@
 package de.neofonie.crashreporting.ui.cities
 
 import and.universal.club.toggolino.de.toggolino.commons.extensions.ioMain
+import and.universal.club.toggolino.de.toggolino.commons.extensions.startActivity
 import and.universal.club.toggolino.de.toggolino.utils.bindView
 import and.universal.club.toggolino.de.toggolino.utils.typedviewholder.TypedViewHolder
 import android.app.AlertDialog
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso
 import de.neofonie.crashreporting.R
 import de.neofonie.crashreporting.app
 import de.neofonie.crashreporting.commons.BaseActivity
+import de.neofonie.crashreporting.commons.LoadingLayout
 import de.neofonie.crashreporting.commons.typedviewholder.TypedViewHolderAdapter
 import de.neofonie.crashreporting.commons.typedviewholder.adapterOf
 import de.neofonie.crashreporting.commons.typedviewholder.viewHolder
@@ -29,6 +31,7 @@ import rx.subscriptions.Subscriptions
 class ListActivity : BaseActivity(R.layout.network_list_activity) {
 
   private val recyclerView: RecyclerView by bindView(R.id.recycler_view)
+  private val loadingLayout: LoadingLayout by bindView(R.id.loading_layout)
 
   private lateinit var adapter: TypedViewHolderAdapter<Any>
 
@@ -38,7 +41,11 @@ class ListActivity : BaseActivity(R.layout.network_list_activity) {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     adapter = adapterOf {
-      viewHolder { CityViewHolder(it) { } }
+      viewHolder {
+        CityViewHolder(it) { data ->
+          startActivity<DetailsActivity> { putString(DetailsActivity.EXTRA_CITY_ID, data.details_id) }
+        }
+      }
     }
     recyclerView.adapter = adapter
     recyclerView.layoutManager = LinearLayoutManager(this)
@@ -46,8 +53,11 @@ class ListActivity : BaseActivity(R.layout.network_list_activity) {
   }
 
   fun subscribeLoadNetwork() {
+    loadingLayout.isLoadingVisible = true
     networkSubscription.unsubscribe()
-    networkSubscription = app.citiesApi.cityList().ioMain().subscribe({ next ->
+    networkSubscription = app.citiesApi.cityList().ioMain().doOnUnsubscribe {
+      loadingLayout.isLoadingVisible = false
+    }.subscribe({ next ->
       adapter.data = next
     }, { error ->
       Crashlytics.logException(error)
