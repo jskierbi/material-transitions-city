@@ -23,3 +23,5 @@ inline fun <reified T> singleOnSubscribe(crossinline body: () -> T): Observable<
 fun <T> Observable<T>.subscribeIoObserveMain(): Observable<T> {
   return this.subscribeOn(io()).observeOn(mainThread())
 }
+
+fun <T> Observable<T>.ioMain() = subscribeOn(io()).observeOn(mainThread())

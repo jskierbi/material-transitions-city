@@ -12,10 +12,11 @@
  */
 package de.neofonie.crashreporting.commons.typedviewholder;
 
-import and.universal.club.toggolino.de.toggolino.R;
+import and.universal.club.toggolino.de.toggolino.utils.typedviewholder.TypedViewHolder;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import de.neofonie.crashreporting.R;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;

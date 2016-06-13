@@ -12,6 +12,7 @@
  */
 package de.neofonie.crashreporting.commons.typedviewholder;
 
+import and.universal.club.toggolino.de.toggolino.utils.typedviewholder.TypedViewHolder;
 import android.view.ViewGroup;
 
 /**
