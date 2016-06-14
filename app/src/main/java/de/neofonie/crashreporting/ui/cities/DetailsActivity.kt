@@ -14,14 +14,15 @@ import android.transition.Slide
 import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionSet
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.fasterxml.jackson.databind.JsonMappingException
 import de.neofonie.crashreporting.R
 import de.neofonie.crashreporting.app
+import de.neofonie.crashreporting.commons.AppLog
 import de.neofonie.crashreporting.commons.BaseActivity
 import de.neofonie.crashreporting.commons.LoadingLayout
 import de.neofonie.crashreporting.modules.cities.api.CitiesApi
@@ -65,14 +66,13 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
       fab.scaleY = 0f;
       window.enterTransition.addListener(object : Transition.TransitionListener {
         override fun onTransitionCancel(transition: Transition?) = Unit
+        override fun onTransitionPause(transition: Transition?) = Unit
+        override fun onTransitionResume(transition: Transition?) = Unit
+        override fun onTransitionStart(transition: Transition?) = Unit
         override fun onTransitionEnd(transition: Transition?) {
           window.enterTransition.removeListener(this);
           fab.animate().scaleX(1f).scaleY(1f);
         }
-
-        override fun onTransitionPause(transition: Transition?) = Unit
-        override fun onTransitionResume(transition: Transition?) = Unit
-        override fun onTransitionStart(transition: Transition?) = Unit
       })
     }
   }
@@ -102,7 +102,10 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
         .subscribe({ next ->
           uiBindData(next)
         }, { error ->
-          Log.e("TAG", "Network error", error)
+          when (error) {
+            is JsonMappingException -> AppLog.e("TAG", "Invalid Server Data Error", error)
+            else -> AppLog.w("TAG", "Network error", error)
+          }
           val dialog = AlertDialog.Builder(this).apply {
             setTitle("Network failed")
             setMessage("Retry?")
@@ -116,7 +119,6 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
   }
 
   fun uiBindData(data: CitiesApi.CityDetails) {
-//    Picasso.with(this).load(data.img).fit().centerCrop().into(image)
     title.text = data.name
     desc.text = data.description
   }
@@ -131,13 +133,9 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
 
       window.enterTransition = TransitionSet()
           .addTransition(Slide(Gravity.BOTTOM).addTarget(R.id.description))
-//          .addTransition(Slide(Gravity.RIGHT).addTarget(R.id.fab_container))
           .addTransition(Fade(Fade.IN).addTarget(R.id.title))
           .excludeTarget(android.R.id.statusBarBackground, true)
           .excludeTarget(android.R.id.navigationBarBackground, true)
-
-//      window.returnTransition = TransitionSet()
-
     }
   }
 }
