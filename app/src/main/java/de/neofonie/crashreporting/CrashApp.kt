@@ -2,6 +2,7 @@ package de.neofonie.crashreporting
 
 import android.app.Activity
 import android.app.Application
+import android.support.multidex.MultiDex
 import com.crashlytics.android.Crashlytics
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.PropertyAccessor
@@ -22,6 +23,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 class CrashApp : Application() {
 
   override fun onCreate() {
+    MultiDex.install(this)
     super.onCreate()
     Fabric.with(this, Crashlytics());
   }

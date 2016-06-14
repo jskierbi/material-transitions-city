@@ -11,6 +11,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
 
 repositories {
   mavenCentral()
@@ -27,6 +28,7 @@ android {
     targetSdkVersion 23
     versionCode 1
     versionName "1.0"
+    multiDexEnabled true
   }
   buildTypes {
     release {
@@ -65,9 +67,11 @@ dependencies {
   compile "com.squareup.okhttp3:okhttp:$okhttp_version"
   compile "com.squareup.okhttp3:okhttp-urlconnection:$okhttp_version"
   compile "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+  compile 'com.google.firebase:firebase-crash:9.0.2'
 
   def picasso_version = "2.5.2"
   compile "com.squareup.picasso:picasso:$picasso_version"
+  compile 'com.android.support:multidex:1.0.0'
 
   compile('com.crashlytics.sdk.android:crashlytics:2.5.6@aar') {
     transitive = true;
