@@ -9,7 +9,7 @@ import rx.Observable
  */
 interface CitiesApi {
 
-  @GET("/bins/4impc")
+  @GET("/bins/qp9g")
   fun cityList(): Observable<List<CityShort>>
 
   @GET("/bins/{id}")

@@ -1,7 +1,7 @@
 package de.neofonie.crashreporting.ui.cities
 
 import and.universal.club.toggolino.de.toggolino.commons.extensions.ioMain
-import and.universal.club.toggolino.de.toggolino.commons.extensions.startActivity
+import and.universal.club.toggolino.de.toggolino.commons.extensions.startActivityWithTransitions
 import and.universal.club.toggolino.de.toggolino.utils.bindView
 import and.universal.club.toggolino.de.toggolino.utils.typedviewholder.TypedViewHolder
 import android.app.AlertDialog
@@ -42,8 +42,10 @@ class ListActivity : BaseActivity(R.layout.network_list_activity) {
     super.onCreate(savedInstanceState)
     adapter = adapterOf {
       viewHolder {
-        CityViewHolder(it) { data ->
-          startActivity<DetailsActivity> { putString(DetailsActivity.EXTRA_CITY_ID, data.details_id) }
+        CityViewHolder(it) { data, holder ->
+          startActivityWithTransitions<DetailsActivity>(android.support.v4.util.Pair<View, String>(holder.thumb as View, getString(R.string.transition_image))) {
+            putExtra(DetailsActivity.EXTRA_CITY_ID, data.details_id)
+          }
         }
       }
     }
@@ -63,7 +65,7 @@ class ListActivity : BaseActivity(R.layout.network_list_activity) {
       Crashlytics.logException(error)
       Log.e("TAG", "API error", error)
       val dialog = AlertDialog.Builder(this).apply {
-        title = "Network failed"
+        setTitle("Network failed")
         setMessage("Retry?")
         setPositiveButton("Retry") { d, w -> subscribeLoadNetwork() }
         setNegativeButton("Back") { d, v -> onBackPressed() }
@@ -81,7 +83,7 @@ class ListActivity : BaseActivity(R.layout.network_list_activity) {
   }
 
   class CityViewHolder(parent: ViewGroup,
-                       val onClick: (CitiesApi.CityShort) -> Unit = {}) :
+                       val onClick: (CitiesApi.CityShort, CityViewHolder) -> Unit = { d, v -> Unit }) :
       TypedViewHolder<CitiesApi.CityShort>(R.layout.li_city, parent) {
 
     val thumb: ImageView by bindView(R.id.thumb)
@@ -90,7 +92,7 @@ class ListActivity : BaseActivity(R.layout.network_list_activity) {
 
     override fun bind(dataItem: CitiesApi.CityShort) {
       separator.visibility = if (adapterPosition == 0) View.GONE else View.VISIBLE
-      itemView.setOnClickListener { onClick(dataItem) }
+      itemView.setOnClickListener { onClick(dataItem, this@CityViewHolder) }
       label.text = dataItem.name
       Picasso.with(context).load(dataItem.thumb).fit().centerCrop().into(thumb)
     }
