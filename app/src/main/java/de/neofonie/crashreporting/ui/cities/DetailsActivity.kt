@@ -2,7 +2,10 @@ package de.neofonie.crashreporting.ui.cities
 
 import and.universal.club.toggolino.de.toggolino.commons.extensions.extra
 import and.universal.club.toggolino.de.toggolino.commons.extensions.toast
+import and.universal.club.toggolino.de.toggolino.utils.bindView
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import de.neofonie.crashreporting.R
 import de.neofonie.crashreporting.commons.BaseActivity
 
@@ -16,6 +19,10 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
   }
 
   val cityId: String by extra(EXTRA_CITY_ID)
+
+  val image: ImageView by bindView(R.id.image)
+  val title: TextView by bindView(R.id.title)
+  val desc: TextView by bindView(R.id.description)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
