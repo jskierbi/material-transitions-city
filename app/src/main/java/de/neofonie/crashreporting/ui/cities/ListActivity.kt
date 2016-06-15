@@ -23,6 +23,7 @@ import de.neofonie.crashreporting.commons.typedviewholder.TypedViewHolderAdapter
 import de.neofonie.crashreporting.commons.typedviewholder.adapterOf
 import de.neofonie.crashreporting.commons.typedviewholder.viewHolder
 import de.neofonie.crashreporting.modules.cities.api.CitiesApi
+import rx.Observable
 import rx.subscriptions.Subscriptions
 
 /**
@@ -43,12 +44,13 @@ class ListActivity : BaseActivity(R.layout.network_list_activity) {
     adapter = adapterOf {
       viewHolder {
         CityViewHolder(it) { data, holder ->
-          startActivityWithTransitions<DetailsActivity>(android.support.v4.util.Pair<View, String>(holder.thumb as View, getString(R.string.transition_image))) {
+          startActivityWithTransitions<DetailsActivity>(holder.thumb to getString(R.string.transition_image)) {
             putExtra(DetailsActivity.EXTRA_CITY_ID, data.details_id)
           }
         }
       }
     }
+    adapter.data = mutableListOf()
     recyclerView.adapter = adapter
     recyclerView.layoutManager = LinearLayoutManager(this)
     subscribeLoadNetwork()
@@ -57,11 +59,14 @@ class ListActivity : BaseActivity(R.layout.network_list_activity) {
   fun subscribeLoadNetwork() {
     loadingLayout.isLoadingVisible = true
     networkSubscription.unsubscribe()
-    networkSubscription = app.citiesApi.cityList().ioMain().doOnUnsubscribe {
+    networkSubscription = app.citiesApi.cityList().flatMap {
+      Observable.from(it).doOnNext { Thread.sleep(100) }
+    }.ioMain().subscribe({ next ->
       loadingLayout.isLoadingVisible = false
-    }.subscribe({ next ->
-      adapter.data = next
+      adapter.data.add(next)
+      adapter.notifyItemInserted(adapter.data.size - 1)
     }, { error ->
+      loadingLayout.isLoadingVisible = false
       Crashlytics.logException(error)
       Log.e("TAG", "API error", error)
       val dialog = AlertDialog.Builder(this).apply {

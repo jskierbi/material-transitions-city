@@ -41,24 +41,24 @@ inline fun <reified T : Activity> Activity.startActivity(config: Bundle.() -> Un
 inline fun <reified T : Activity> Fragment.startActivity(): Unit = activity.startActivity<T>()
 inline fun <reified T : Activity> android.app.Fragment.startActivity(): Unit = activity.startActivity<T>()
 
-inline fun <reified T : Activity> Activity.startActivityWithTransitions(vararg sharedElements: android.support.v4.util.Pair<View, String> = emptyArray()): Unit
+inline fun <reified T : Activity> Activity.startActivityWithTransitions(vararg sharedElements: Pair<View, String> = emptyArray()): Unit
     = startActivityWithTransitions<T>(*sharedElements) {}
 
-inline fun <reified T : Activity> Activity.startActivityWithTransitions(vararg sharedElements: android.support.v4.util.Pair<View, String> = emptyArray(),
+inline fun <reified T : Activity> Activity.startActivityWithTransitions(vararg sharedElements: Pair<View, String> = emptyArray(),
                                                                         intentSetup: Intent.() -> Unit): Unit
     = startActivity(Intent(this, T::class.java).apply { intentSetup() }, makeSceneTransitionAnimation(*sharedElements).toBundle())
 
-inline fun <reified T : Activity> Fragment.startActivityWithTransitions(vararg sharedElements: android.support.v4.util.Pair<View, String> = emptyArray()): Unit
+inline fun <reified T : Activity> Fragment.startActivityWithTransitions(vararg sharedElements: Pair<View, String> = emptyArray()): Unit
     = activity.startActivityWithTransitions<T>(*sharedElements) {}
 
-inline fun <reified T : Activity> Fragment.startActivityWithTransitions(vararg sharedElements: android.support.v4.util.Pair<View, String> = emptyArray(),
+inline fun <reified T : Activity> Fragment.startActivityWithTransitions(vararg sharedElements: Pair<View, String> = emptyArray(),
                                                                         intentSetup: Intent.() -> Unit): Unit
     = activity.startActivityWithTransitions<T>(*sharedElements) { intentSetup() }
 
-inline fun <reified T : Activity> android.app.Fragment.startActivityWithTransitions(vararg sharedElements: android.support.v4.util.Pair<View, String> = emptyArray()): Unit
+inline fun <reified T : Activity> android.app.Fragment.startActivityWithTransitions(vararg sharedElements: Pair<View, String> = emptyArray()): Unit
     = activity.startActivityWithTransitions<T>(*sharedElements) {}
 
-inline fun <reified T : Activity> android.app.Fragment.startActivityWithTransitions(vararg sharedElements: android.support.v4.util.Pair<View, String> = emptyArray(),
+inline fun <reified T : Activity> android.app.Fragment.startActivityWithTransitions(vararg sharedElements: Pair<View, String> = emptyArray(),
                                                                                     intentSetup: Intent.() -> Unit): Unit
     = activity.startActivityWithTransitions<T>(*sharedElements) { intentSetup() }
 
@@ -76,8 +76,8 @@ fun Activity.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG)
 
 fun Fragment.toast(text: String) = Toast.makeText(activity, text, Toast.LENGTH_LONG).show()
 
-fun Activity.makeSceneTransitionAnimation(vararg sharedElements: android.support.v4.util.Pair<View, String> = emptyArray())
-    = ActivityOptionsCompat.makeSceneTransitionAnimation(this, *sharedElements)
+fun Activity.makeSceneTransitionAnimation(vararg sharedElements: Pair<View, String> = emptyArray())
+    = ActivityOptionsCompat.makeSceneTransitionAnimation(this, *(sharedElements.supportPair))
 
 private val Any?.unit: Unit get() = Unit
 
@@ -125,3 +125,9 @@ fun Activity.hideKeyboard(view: View) = (getSystemService(Context.INPUT_METHOD_S
 
 /** Hides keyboard, needs a view to obtain window token */
 fun Fragment.hideKeyboard(view: View) = activity?.hideKeyboard(view)
+
+val <T, K> Pair<T, K>.supportPair: android.support.v4.util.Pair<T, K>
+  get() = android.support.v4.util.Pair(first, second)
+
+val <T, K> Array<out Pair<T, K>>.supportPair: Array<out android.support.v4.util.Pair<T, K>>
+  get() = this.map { it.supportPair }.toTypedArray()
