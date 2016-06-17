@@ -5,13 +5,11 @@ import and.universal.club.toggolino.de.toggolino.commons.extensions.ioMain
 import and.universal.club.toggolino.de.toggolino.commons.extensions.onClick
 import and.universal.club.toggolino.de.toggolino.commons.extensions.toast
 import and.universal.club.toggolino.de.toggolino.utils.bindView
-import android.animation.Animator
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.transition.Fade
 import android.transition.Slide
-import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionSet
 import android.view.Gravity
@@ -25,6 +23,8 @@ import de.neofonie.crashreporting.app
 import de.neofonie.crashreporting.commons.AppLog
 import de.neofonie.crashreporting.commons.BaseActivity
 import de.neofonie.crashreporting.commons.LoadingLayout
+import de.neofonie.crashreporting.commons.transitions.RevealTransition
+import de.neofonie.crashreporting.commons.transitions.ZoomTransition
 import de.neofonie.crashreporting.modules.cities.api.CitiesApi
 import rx.subscriptions.Subscriptions
 
@@ -61,20 +61,20 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
     onClick(R.id.fab) { toast("Not implemented yet") }
     subscribeLoadNetwork()
 
-    if (savedInstanceState == null) {
-      fab.scaleX = 0f;
-      fab.scaleY = 0f;
-      window.enterTransition.addListener(object : Transition.TransitionListener {
-        override fun onTransitionCancel(transition: Transition?) = Unit
-        override fun onTransitionPause(transition: Transition?) = Unit
-        override fun onTransitionResume(transition: Transition?) = Unit
-        override fun onTransitionStart(transition: Transition?) = Unit
-        override fun onTransitionEnd(transition: Transition?) {
-          window.enterTransition.removeListener(this);
-          fab.animate().scaleX(1f).scaleY(1f);
-        }
-      })
-    }
+//    if (savedInstanceState == null) {
+//      fab.scaleX = 0f;
+//      fab.scaleY = 0f;
+//      window.enterTransition.addListener(object : Transition.TransitionListener {
+//        override fun onTransitionCancel(transition: Transition?) = Unit
+//        override fun onTransitionPause(transition: Transition?) = Unit
+//        override fun onTransitionResume(transition: Transition?) = Unit
+//        override fun onTransitionStart(transition: Transition?) = Unit
+//        override fun onTransitionEnd(transition: Transition?) {
+//          window.enterTransition.removeListener(this);
+//          fab.animate().scaleX(1f).scaleY(1f);
+//        }
+//      })
+//    }
   }
 
   override fun onDestroy() {
@@ -83,16 +83,16 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
     super.onDestroy()
   }
 
-  override fun onBackPressed() {
-    fab.animate().scaleX(0f).scaleY(0f).setListener(object : Animator.AnimatorListener {
-      override fun onAnimationRepeat(animation: Animator?) = Unit
-      override fun onAnimationCancel(animation: Animator?) = Unit
-      override fun onAnimationStart(animation: Animator?) = Unit
-      override fun onAnimationEnd(animation: Animator?) {
-        supportFinishAfterTransition()
-      }
-    })
-  }
+//  override fun onBackPressed() {
+//    fab.animate().scaleX(0f).scaleY(0f).setListener(object : Animator.AnimatorListener {
+//      override fun onAnimationRepeat(animation: Animator?) = Unit
+//      override fun onAnimationCancel(animation: Animator?) = Unit
+//      override fun onAnimationStart(animation: Animator?) = Unit
+//      override fun onAnimationEnd(animation: Animator?) {
+//        supportFinishAfterTransition()
+//      }
+//    })
+//  }
 
   fun subscribeLoadNetwork() {
     loadingLayout.isLoadingVisible = true
@@ -127,13 +127,15 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
       fabContainer.isTransitionGroup = true
-      image.transitionName = getString(R.string.transition_image)
+//      image.transitionName = getString(R.string.transition_image)
 
       window.sharedElementEnterTransition = TransitionInflater.from(this).inflateTransition(R.transition.changebounds_with_arcmotion)
 
       window.enterTransition = TransitionSet()
           .addTransition(Slide(Gravity.BOTTOM).addTarget(R.id.description))
           .addTransition(Fade(Fade.IN).addTarget(R.id.title))
+          .addTransition(ZoomTransition().addTarget(R.id.fab_container))
+          .addTransition(RevealTransition().addTarget(R.id.image))
           .excludeTarget(android.R.id.statusBarBackground, true)
           .excludeTarget(android.R.id.navigationBarBackground, true)
     }

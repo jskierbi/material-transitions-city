@@ -1,59 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<de.neofonie.crashreporting.commons.LoadingLayout android:id="@+id/loading_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-  <ScrollView
+  <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:fillViewport="true">
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="200dp"
+        tools:background="#000000">
 
-      <FrameLayout
+      <ImageView
+          android:id="@+id/image"
           android:layout_width="match_parent"
           android:layout_height="200dp"
-          tools:background="#000000">
+          android:scaleType="centerCrop"
+          tools:src="@android:drawable/presence_away" />
 
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            tools:src="@android:drawable/presence_away" />
+      <TextView
+          android:id="@+id/title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom|left"
+          android:padding="8dp"
+          android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+          tools:text="Paris" />
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"
-            android:padding="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
-            tools:text="Paris" />
+    </FrameLayout>
 
-      </FrameLayout>
+    <FrameLayout
+        android:id="@+id/fab_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="-28dp">
 
-      <FrameLayout
-          android:id="@+id/fab_container"
+      <android.support.design.widget.FloatingActionButton
+          android:id="@+id/fab"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end|bottom"
-          android:layout_marginRight="16dp"
-          android:layout_marginTop="-28dp">
+          android:src="@drawable/ic_star_border_white_24dp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:src="@drawable/ic_star_border_white_24dp" />
+    </FrameLayout>
 
-      </FrameLayout>
+
+    <de.neofonie.crashreporting.commons.LoadingLayout
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
       <TextView
           android:id="@+id/description"
@@ -65,8 +66,8 @@
           android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
           tools:text="Paris (French: [paʁi] ( listen)) is the capital and most populous city of France. Situated on the river Seine in the north of the country, it is in the centre of the Île-de-France region, also known as the région parisienne, Paris Region. The City of Paris largely retains its one and a half century old administrative boundaries, with an area of 105 km² (41 mi²) and as of 2014 a population of 2,241,346.[3][4] Together with its suburbs, the whole agglomeration has a population of 10,550,350 (Jan. 2012 census).[2] Paris' metropolitan area spans most of the Île-de-France region and has a population of 12,405,426 (Jan. 2013 census),[5] constituting one-fifth of the population of France.[6] The administrative region covers 12,012 km² (4,638 mi²), with approximately 12 million inhabitants as of 2014, and has its own regional council and president.[7]" />
 
-    </LinearLayout>
+    </de.neofonie.crashreporting.commons.LoadingLayout>
 
-  </ScrollView>
+  </LinearLayout>
 
-</de.neofonie.crashreporting.commons.LoadingLayout>
+</ScrollView>
