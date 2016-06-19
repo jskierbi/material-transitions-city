@@ -60,21 +60,6 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
     setupTransitions()
     onClick(R.id.fab) { toast("Not implemented yet") }
     subscribeLoadNetwork()
-
-//    if (savedInstanceState == null) {
-//      fab.scaleX = 0f;
-//      fab.scaleY = 0f;
-//      window.enterTransition.addListener(object : Transition.TransitionListener {
-//        override fun onTransitionCancel(transition: Transition?) = Unit
-//        override fun onTransitionPause(transition: Transition?) = Unit
-//        override fun onTransitionResume(transition: Transition?) = Unit
-//        override fun onTransitionStart(transition: Transition?) = Unit
-//        override fun onTransitionEnd(transition: Transition?) {
-//          window.enterTransition.removeListener(this);
-//          fab.animate().scaleX(1f).scaleY(1f);
-//        }
-//      })
-//    }
   }
 
   override fun onDestroy() {
@@ -82,17 +67,6 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
     dialogSubscription.unsubscribe()
     super.onDestroy()
   }
-
-//  override fun onBackPressed() {
-//    fab.animate().scaleX(0f).scaleY(0f).setListener(object : Animator.AnimatorListener {
-//      override fun onAnimationRepeat(animation: Animator?) = Unit
-//      override fun onAnimationCancel(animation: Animator?) = Unit
-//      override fun onAnimationStart(animation: Animator?) = Unit
-//      override fun onAnimationEnd(animation: Animator?) {
-//        supportFinishAfterTransition()
-//      }
-//    })
-//  }
 
   fun subscribeLoadNetwork() {
     loadingLayout.isLoadingVisible = true

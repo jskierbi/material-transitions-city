@@ -7,6 +7,7 @@ import android.content.Context
 import android.transition.TransitionValues
 import android.transition.Visibility
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 
 /**
@@ -17,45 +18,28 @@ class ZoomTransition : Visibility {
 
   constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-  override fun onAppear(sceneRoot: ViewGroup?,
-                        startValues: TransitionValues?,
-                        startVisibility: Int,
-                        endValues: TransitionValues?,
-                        endVisibility: Int): Animator? {
-
-//    AnimatorSet set = new AnimatorSet();
-//    set.playTogether(
-//        ObjectAnimator.ofFloat(myView, "rotationX", 0, 360),
-//        ObjectAnimator.ofFloat(myView, "rotationY", 0, 180),
-//        ObjectAnimator.ofFloat(myView, "rotation", 0, -90),
-//        ObjectAnimator.ofFloat(myView, "translationX", 0, 90),
-//        ObjectAnimator.ofFloat(myView, "translationY", 0, 90),
-//        ObjectAnimator.ofFloat(myView, "scaleX", 1, 1.5f),
-//        ObjectAnimator.ofFloat(myView, "scaleY", 1, 0.5f),
-//        ObjectAnimator.ofFloat(myView, "alpha", 1, 0.25f, 1)
-//    );
-//    set.setDuration(5 * 1000).start();
-//    return super.onAppear(sceneRoot, startValues, startVisibility, endValues, endVisibility)
-
+  override fun onAppear(sceneRoot: ViewGroup,
+                        view: View,
+                        startValues: TransitionValues,
+                        endValues: TransitionValues): Animator {
     return AnimatorSet().apply {
       playTogether(
-          ObjectAnimator.ofFloat(sceneRoot, "scaleX", 1f, 0f),
-          ObjectAnimator.ofFloat(sceneRoot, "scaleY", 1f, 0f),
-          ObjectAnimator.ofFloat(sceneRoot, "rotation", -90f, 0f)
+          ObjectAnimator.ofFloat(view, "scaleX", 0f, 1f),
+          ObjectAnimator.ofFloat(view, "scaleY", 0f, 1f),
+          ObjectAnimator.ofFloat(view, "rotation", -90f, 0f)
       )
     }
   }
 
-  override fun onDisappear(sceneRoot: ViewGroup?,
-                           startValues: TransitionValues?,
-                           startVisibility: Int, endValues:
-                           TransitionValues?,
-                           endVisibility: Int): Animator? {
+  override fun onDisappear(sceneRoot: ViewGroup,
+                           view: View,
+                           startValues: TransitionValues,
+                           endValues: TransitionValues): Animator {
     return AnimatorSet().apply {
       playTogether(
-          ObjectAnimator.ofFloat(sceneRoot, "scaleX", 0f, 1f),
-          ObjectAnimator.ofFloat(sceneRoot, "scaleY", 0f, 1f),
-          ObjectAnimator.ofFloat(sceneRoot, "rotation", 0f, 90f)
+          ObjectAnimator.ofFloat(view, "scaleX", 1f, 0f),
+          ObjectAnimator.ofFloat(view, "scaleY", 1f, 0f),
+          ObjectAnimator.ofFloat(view, "rotation", 0f, 90f)
       )
     }
   }
