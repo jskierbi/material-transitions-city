@@ -22,5 +22,6 @@ interface CitiesApi {
 
   data class CityDetails(val name: String,
                          val description: String,
+                         val thumb: String,
                          val img: String)
 }

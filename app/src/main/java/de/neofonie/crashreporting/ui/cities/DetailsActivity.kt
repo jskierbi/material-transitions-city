@@ -8,16 +8,16 @@ import and.universal.club.toggolino.de.toggolino.utils.bindView
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.transition.ChangeBounds
+import android.transition.ChangeImageTransform
 import android.transition.Fade
-import android.transition.Slide
-import android.transition.TransitionInflater
 import android.transition.TransitionSet
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.fasterxml.jackson.databind.JsonMappingException
+import com.squareup.picasso.Picasso
 import de.neofonie.crashreporting.R
 import de.neofonie.crashreporting.app
 import de.neofonie.crashreporting.commons.AppLog
@@ -41,6 +41,7 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
 
   val loadingLayout: LoadingLayout by bindView(R.id.loading_layout)
   val image: ImageView by bindView(R.id.image)
+  val thumb: ImageView by bindView(R.id.thumb)
   val title: TextView by bindView(R.id.title)
   val desc: TextView by bindView(R.id.description)
   val fab: View by bindView(R.id.fab)
@@ -51,12 +52,6 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    image.setImageResource(when (cityId) {
-      "26tq8" -> R.drawable.berlin
-      "28yw0" -> R.drawable.warsaw
-      "18qvk" -> R.drawable.newyork
-      else -> R.drawable.transparent
-    })
     setupTransitions()
     onClick(R.id.fab) { toast("Not implemented yet") }
     subscribeLoadNetwork()
@@ -95,23 +90,40 @@ class DetailsActivity : BaseActivity(R.layout.network_details_activity) {
   fun uiBindData(data: CitiesApi.CityDetails) {
     title.text = data.name
     desc.text = data.description
+    Picasso.with(this).load(data.img).into(image)
+    Picasso.with(this).load(data.thumb).into(thumb)
   }
 
   private fun setupTransitions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
       fabContainer.isTransitionGroup = true
-//      image.transitionName = getString(R.string.transition_image)
+//      window.sharedElementsUseOverlay = false
 
-      window.sharedElementEnterTransition = TransitionInflater.from(this).inflateTransition(R.transition.changebounds_with_arcmotion)
+      thumb.transitionName = getString(R.string.transition_image)
 
-      window.enterTransition = TransitionSet()
-          .addTransition(Slide(Gravity.BOTTOM).addTarget(R.id.description))
-          .addTransition(Fade(Fade.IN).addTarget(R.id.title))
-          .addTransition(ZoomTransition().addTarget(R.id.fab_container))
-          .addTransition(RevealTransition().addTarget(R.id.image))
-          .excludeTarget(android.R.id.statusBarBackground, true)
-          .excludeTarget(android.R.id.navigationBarBackground, true)
+      window.sharedElementReturnTransition = TransitionSet().apply {
+        addTransition(ChangeImageTransform())
+        addTransition(ChangeBounds())
+        startDelay = 200L
+      }
+
+      window.enterTransition = TransitionSet().apply {
+        addTransition(Fade(Fade.IN).addTarget(R.id.title).addTarget(R.id.description).setStartDelay(200L))
+        addTransition(RevealTransition().addTarget(R.id.image).setStartDelay(200L))
+        addTransition(ZoomTransition().addTarget(R.id.fab_container))
+        excludeTarget(android.R.id.statusBarBackground, true)
+        excludeTarget(android.R.id.navigationBarBackground, true)
+      }
+
+      window.returnTransition = TransitionSet().apply {
+        addTransition(Fade(Fade.OUT).addTarget(R.id.title).addTarget(R.id.description))
+        addTransition(RevealTransition().addTarget(R.id.image))
+        addTransition(ZoomTransition().addTarget(R.id.fab_container))
+        excludeTarget(android.R.id.statusBarBackground, true)
+        excludeTarget(android.R.id.navigationBarBackground, true)
+      }
+
     }
   }
 }

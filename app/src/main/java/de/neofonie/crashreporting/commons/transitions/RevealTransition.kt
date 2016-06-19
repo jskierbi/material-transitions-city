@@ -13,7 +13,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
-import java.util.*
+import java.util.ArrayList
 
 /**
  * Created by jakub on 05/03/2015.
@@ -47,8 +47,8 @@ class RevealTransition : Visibility {
   }
 
   private fun createAnimator(view: View, startRadius: Float, endRadius: Float): Animator {
-    val centerX = view.width / 2
-    val centerY = view.height / 2
+    val centerX = view.width / 5
+    val centerY = view.height * 9 / 10
 
     val reveal = ViewAnimationUtils.createCircularReveal(view, centerX, centerY, startRadius, endRadius)
     return NoPauseAnimatorWrapper(reveal)

@@ -13,7 +13,7 @@ import android.view.ViewGroup
 /**
  * Created on 6/17/16.
  */
-class ZoomTransition : Visibility {
+class RotateTransition : Visibility {
   constructor() : super()
 
   constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -24,8 +24,7 @@ class ZoomTransition : Visibility {
                         endValues: TransitionValues): Animator {
     return AnimatorSet().apply {
       playTogether(
-          ObjectAnimator.ofFloat(view, "scaleX", 0f, 1f),
-          ObjectAnimator.ofFloat(view, "scaleY", 0f, 1f)
+          ObjectAnimator.ofFloat(view, "rotation", -90f, 0f)
       )
     }
   }
@@ -36,8 +35,7 @@ class ZoomTransition : Visibility {
                            endValues: TransitionValues): Animator {
     return AnimatorSet().apply {
       playTogether(
-          ObjectAnimator.ofFloat(view, "scaleX", 1f, 0f),
-          ObjectAnimator.ofFloat(view, "scaleY", 1f, 0f)
+          ObjectAnimator.ofFloat(view, "rotation", 0f, 90f)
       )
     }
   }
