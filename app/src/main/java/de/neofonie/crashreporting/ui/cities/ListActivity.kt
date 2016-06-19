@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.crashlytics.android.Crashlytics
 import com.squareup.picasso.Picasso
 import de.neofonie.crashreporting.R
 import de.neofonie.crashreporting.app
@@ -67,7 +66,6 @@ class ListActivity : BaseActivity(R.layout.network_list_activity) {
       adapter.notifyItemInserted(adapter.data.size - 1)
     }, { error ->
       loadingLayout.isLoadingVisible = false
-      Crashlytics.logException(error)
       Log.e("TAG", "API error", error)
       val dialog = AlertDialog.Builder(this).apply {
         setTitle("Network failed")
